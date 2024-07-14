@@ -29,7 +29,7 @@ public class Server {
                 threadPool.submit(() -> handleConnection(socket));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
@@ -44,25 +44,21 @@ public class Server {
                 return;
             }
 
-            String path = requestLine.split(" ")[1];
-            if (!validPaths.contains(path)) {
-                sendNotFound(out);
-                return;
+            String[] requestParts = requestLine.split(" ")[1].split("\\?", 2);
+            String path = requestParts[0];
+            Request request = new Request(path);
+            if (requestParts.length > 1) {
+                String[] queryParams = requestParts[1].split("&");
+                for (String param : queryParams) {
+                    String[] keyValue = param.split("=", 2);
+                    if (keyValue.length == 2) {
+                        request.addQueryParam(keyValue[0], keyValue[1]);
+                    }
+                }
             }
 
-            Path filePath = Path.of(".", "public", path);
-            if (!Files.exists(filePath)) {
-                sendNotFound(out);
-                return;
-            }
-
-            if (path.equals("/classic.html")) {
-                handleClassicPage(filePath, out);
-            } else {
-                sendFile(filePath, out);
-            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
@@ -102,5 +98,9 @@ public class Server {
         ).getBytes());
         Files.copy(filePath, out);
         out.flush();
+    }
+
+    public void addHandler(String method, String path, Handler handler) {
+
     }
 }

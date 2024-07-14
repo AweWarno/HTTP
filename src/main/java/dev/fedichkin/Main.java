@@ -1,11 +1,28 @@
 package dev.fedichkin;
 
+import com.sun.net.httpserver.Request;
+
+import java.io.BufferedOutputStream;
+
+
 public class Main {
     public static void main(String[] args) {
-        int port = 9999;
-        Server server = new Server(port);
+        final var server = new Server(9999);
+
+        // добавление хендлеров (обработчиков)
+        server.addHandler("GET", "/messages", new Handler() {
+            public void handle(Request request, BufferedOutputStream responseStream) {
+
+            }
+        });
+        server.addHandler("POST", "/messages", new Handler() {
+            public void handle(Request request, BufferedOutputStream responseStream) {
+
+            }
+        });
+
         server.startServer();
-        System.out.println("Сервер запущен");
     }
 }
+
 
