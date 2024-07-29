@@ -11,6 +11,10 @@ public class Request {
         this.path = path;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public void addQueryParam(String key, String value) {
         queryParams.put(key, value);
     }
